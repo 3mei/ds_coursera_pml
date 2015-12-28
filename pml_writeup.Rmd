@@ -1,0 +1,100 @@
+---
+title: "pml_writeup"
+output: html_document
+---
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+We want to predict activity quality from activity monitors
+
+https://github.com/bpoweski/practical-machine-learning/blob/master/project.Rmd
+https://github.com/bpoweski/practical-machine-learning/blob/master/project.R
+https://github.com/gloriali/PracticalMachineLearning_2014/blob/gh-pages/project_report.Rmd
+
+## Import packages
+```{r, warning=FALSE}
+library(caret)
+```
+
+## Read data
+```{r}
+raw_training <- read.csv("pml-training.csv")
+raw_testing <- read.csv("pml-testing.csv")
+```
+
+
+
+## Clean data
+First, let's use `nearZeroVar()` to find covariates with near zero values. These should not be used to train our model as they cannot provide any value but can undermine its performance.
+
+```{r}
+nzv_cols_to_drop <- nearZeroVar(raw_training, saveMetrics = FALSE)
+nzv_cols_to_drop
+length(nzv_cols_to_drop)
+```
+
+
+We have 60 covariates that have near zero values.
+
+Second, let's remove any columns that have too many missing values. In this particular data set, there are 67 covariates with more than 97.9% of missing values (19,216 out of 19,622). We use a threshold of 95% and remove all such covariates:
+
+```{r}
+na_cols_to_drop <- which(colSums(is.na(raw_training))/dim(raw_training)[1] > 0.95, TRUE)
+length(na_cols_to_drop)
+```
+
+Finally, we note that the first five columns contain meta data (record ID, user name, and time stamps). Such data is generally not likely to be useful and we exclude it from consideration:
+
+```{r}
+meta_cols_to_drop <- 1:5
+```
+
+The final clean training data set has 53 covariates (`classe` being the 54th variable)
+```{r}
+training <- raw_training[, c(-nzv_cols_to_drop, -na_cols_to_drop, -meta_cols_to_drop)]
+```
+
+We apply the same cleaning to the testing data set:
+```{r}
+testing <- raw_testing[, c(-nzv_cols_to_drop, -na_cols_to_drop, -meta_cols_to_drop)]
+```
+
+## Partition the data
+Let's partition the data using the 60/40 rule
+```{r}
+inTrain <- createDataPartition(y=training$classe, p=0.6, list=FALSE)
+
+myTraining <- training[inTrain, ]
+myTesting <- training[-inTrain, ]
+```
+
+We have roughly 11.8k training samples and 7.9k testing samples:
+```{r}
+dim(myTraining)
+dim(myTesting)
+```
+
+
+## A simple linear model
+A simple linear model, .e.g, using linear discriminant analysis, does a relatively poor job predicting the activity quliaty class from the 54 covariates. The in-sample accuracy is only 71%:
+```{r, warning=FALSE}
+modFit_lda <- train(classe ~ ., data=myTraining, method="lda")
+myPrediction_lda <- predict(modFit_lda, myTesting)
+confusionMatrix(myPrediction_lda, myTesting$classe)
+```
+
+## Random forest
+```{r, warning=FALSE}
+modFit_rf <- train(classe ~ ., data=myTraining, method="rf", prox=TRUE)
+myPrediction_rf <- predict(modFit_rf, myTesting)
+confusionMatrix(myPrediction_rf, myTesting$classe)
+```
+
+
