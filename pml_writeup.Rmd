@@ -98,6 +98,12 @@ myPrediction_rf <- predict(modFit_rf, myTesting)
 confusionMatrix(myPrediction_rf, myTesting$classe)
 ```
 
+## Final prediction
+Using random forests, we get an out-of-sample accuracy of 99.6% 
+```
+prediction_rf <- predict(modFit_rf, testing)
+confusionMatrix(prediction_rf, testing$classe)
+```
 
 
 
