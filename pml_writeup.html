@@ -118,56 +118,49 @@ myTesting &lt;- training[-inTrain, ]</code></pre>
 </div>
 <div id="a-simple-linear-model" class="section level2">
 <h2>A simple linear model</h2>
-<p>A simple linear model, .e.g, using linear discriminant analysis, does a relatively poor job predicting the activity quliaty class from the 54 covariates:</p>
-<pre class="r"><code>modFit_lda &lt;- train(classe ~ ., data=training, method=&quot;lda&quot;)</code></pre>
+<p>A simple linear model, .e.g, using linear discriminant analysis, does a relatively poor job predicting the activity quliaty class from the 54 covariates. The in-sample accuracy is only 71%:</p>
+<pre class="r"><code>modFit_lda &lt;- train(classe ~ ., data=myTraining, method=&quot;lda&quot;)</code></pre>
 <pre><code>## Loading required package: MASS</code></pre>
-<pre><code>## Warning: package 'MASS' was built under R version 3.2.2</code></pre>
 <pre class="r"><code>myPrediction_lda &lt;- predict(modFit_lda, myTesting)
-table(myPrediction_lda, myTesting$classe)</code></pre>
-<pre><code>##                 
-## myPrediction_lda    A    B    C    D    E
-##                A 1833  194  137   84   65
-##                B   64 1006  126   46  216
-##                C  154  192  919  149  126
-##                D  171   65  147  970  135
-##                E   10   61   39   37  900</code></pre>
-<p>The accuracy is only</p>
-<pre class="r"><code>confusionMatrix(myPrediction_lda, myTesting$classe)</code></pre>
+confusionMatrix(myPrediction_lda, myTesting$classe)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1833  194  137   84   65
-##          B   64 1006  126   46  216
-##          C  154  192  919  149  126
-##          D  171   65  147  970  135
-##          E   10   61   39   37  900
+##          A 1824  214  131   71   68
+##          B   57  986  127   49  186
+##          C  155  197  919  169  126
+##          D  185   57  153  948  149
+##          E   11   64   38   49  913
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.7173          
-##                  95% CI : (0.7072, 0.7273)
+##                Accuracy : 0.7125          
+##                  95% CI : (0.7023, 0.7225)
 ##     No Information Rate : 0.2845          
 ##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
 ##                                           
-##                   Kappa : 0.6423          
+##                   Kappa : 0.6363          
 ##  Mcnemar's Test P-Value : &lt; 2.2e-16       
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.8212   0.6627   0.6718   0.7543   0.6241
-## Specificity            0.9145   0.9286   0.9041   0.9210   0.9770
-## Pos Pred Value         0.7925   0.6900   0.5968   0.6519   0.8596
-## Neg Pred Value         0.9279   0.9198   0.9288   0.9503   0.9203
+## Sensitivity            0.8172   0.6495   0.6718   0.7372   0.6331
+## Specificity            0.9138   0.9338   0.9001   0.9171   0.9747
+## Pos Pred Value         0.7903   0.7018   0.5868   0.6354   0.8493
+## Neg Pred Value         0.9263   0.9174   0.9285   0.9468   0.9219
 ## Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
-## Detection Rate         0.2336   0.1282   0.1171   0.1236   0.1147
-## Detection Prevalence   0.2948   0.1858   0.1963   0.1897   0.1334
-## Balanced Accuracy      0.8679   0.7956   0.7880   0.8377   0.8006</code></pre>
-<pre><code>predictionsA1 &lt;- predict(modFitA1, myTesting, type = &quot;class&quot;)
-confusionMatrix(predictionsA1, myTesting$classe)
-modFit &lt;- train(Species~ .,data=training,method=&quot;rf&quot;,prox=TRUE)
-</code></pre>
+## Detection Rate         0.2325   0.1257   0.1171   0.1208   0.1164
+## Detection Prevalence   0.2942   0.1791   0.1996   0.1902   0.1370
+## Balanced Accuracy      0.8655   0.7917   0.7860   0.8271   0.8039</code></pre>
+</div>
+<div id="random-forest" class="section level2">
+<h2>Random forest</h2>
+<p>Random forest prediction (upon rerun, this is taking too long to run, but the accuracy on the previous run was 99%)</p>
+<pre><code>modFit_rf &lt;- train(classe ~ ., data=myTraining, method=&quot;rf&quot;, prox=TRUE)
+myPrediction_rf &lt;- predict(modFit_rf, myTesting)
+confusionMatrix(myPrediction_rf, myTesting$classe)</code></pre>
 </div>
 
 

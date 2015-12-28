@@ -91,10 +91,13 @@ confusionMatrix(myPrediction_lda, myTesting$classe)
 ```
 
 ## Random forest
-```{r, warning=FALSE}
+Random forest prediction (upon rerun, this is taking too long to run, but the accuracy on the previous run was 99%)
+```
 modFit_rf <- train(classe ~ ., data=myTraining, method="rf", prox=TRUE)
 myPrediction_rf <- predict(modFit_rf, myTesting)
 confusionMatrix(myPrediction_rf, myTesting$classe)
 ```
+
+
 
 
