@@ -3,21 +3,6 @@ title: "pml_writeup"
 output: html_document
 ---
 
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-plot(cars)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-
-We want to predict activity quality from activity monitors
-
-https://github.com/bpoweski/practical-machine-learning/blob/master/project.Rmd
-https://github.com/bpoweski/practical-machine-learning/blob/master/project.R
-https://github.com/gloriali/PracticalMachineLearning_2014/blob/gh-pages/project_report.Rmd
-
 ## Import packages
 ```{r, warning=FALSE}
 library(caret)
